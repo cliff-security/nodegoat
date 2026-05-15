@@ -7,6 +7,8 @@ const MemosHandler = require("./memos");
 const ResearchHandler = require("./research");
 const tutorialRouter = require("./tutorial");
 const ErrorHandler = require("./error").errorHandler;
+const { safeRedirect } = require("../utils/urlValidator");
+const redirectConfig = require("../../config/redirectWhitelist");
 
 const index = (app, db) => {
 
@@ -68,8 +70,9 @@ const index = (app, db) => {
 
     // Handle redirect for learning resources link
     app.get("/learn", isLoggedIn, (req, res) => {
-        // Insecure way to handle redirects by taking redirect url from query string
-        return res.redirect(req.query.url);
+        // Secure redirect with URL validation to prevent open redirect attacks
+        const redirectUrl = req.query.url;
+        return safeRedirect(res, redirectUrl, console.warn, redirectConfig.allowedDomains);
     });
 
     // Research Page

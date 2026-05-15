@@ -28,7 +28,8 @@
   },
   "comments": {
     "//": "a9 insecure components",
-    "security-note": "utile@0.3.0 (transitive dependency via broadway/prompt) has NSWG-ECO-445 vulnerability. No patched version available. Application does not directly use utile. See SECURITY-AUDIT.md for details."
+    "security-note": "utile@0.3.0 (transitive dependency via broadway/prompt) has NSWG-ECO-445 vulnerability. No patched version available. Application does not directly use utile. See SECURITY-AUDIT.md for details.",
+    "cve-2024-43799": "send: Code Execution via Unsafe Redirect - Fixed in send@0.19.0. Express@4.22.2 includes send@0.19.2, eliminating CVE-2024-43799 code execution vulnerability."
   },
   "scripts": {
     "start": "node server.js",

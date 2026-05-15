@@ -25,7 +25,8 @@
     "underscore": "^1.13.0-2"
   },
   "comments": {
-    "//": "a9 insecure components"
+    "//": "a9 insecure components",
+    "security-note": "utile@0.3.0 (transitive dependency via broadway/prompt) has NSWG-ECO-445 vulnerability. No patched version available. Application does not directly use utile. See SECURITY-AUDIT.md for details."
   },
   "scripts": {
     "start": "node server.js",

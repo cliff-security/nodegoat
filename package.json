@@ -12,7 +12,7 @@
     "dont-sniff-mimetype": "^1.0.0",
     "express": "^4.19.2",
     "express-session": "^1.13.0",
-    "forever": "^2.0.0",
+    "forever": "^4.0.3",
     "helmet": "^2.0.0",
     "helmet-csp": "2.9.1",
     "marked": "0.3.5",
@@ -60,7 +60,7 @@
     "grunt-retire": "^0.3.12",
     "jshint": "2.12.0",
     "mocha": "^2.4.5",
-    "nodemon": "^1.19.1",
+    "nodemon": "^3.1.0",
     "selenium-webdriver": "^2.53.2",
     "should": "^8.3.1",
     "zaproxy": "^0.2.0"
@@ -68,6 +68,7 @@
   "repository": "https://github.com/OWASP/NodejsGoat",
   "license": "Apache 2.0",
   "overrides": {
-    "bson": ">=1.1.4"
+    "bson": ">=1.1.4",
+    "braces": ">=3.0.3"
   }
 }

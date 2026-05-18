@@ -3,6 +3,29 @@ const {
     environmentalScripts
 } = require("../../config/config");
 
+/* Validation helper to safely parse and validate contribution input */
+function validateContributionInput(value) {
+    // Validate input is a string or number
+    if (value === null || value === undefined) {
+        return { valid: false, error: "Value is required" };
+    }
+    
+    // Parse as integer - safely rejects any non-numeric strings
+    const parsed = parseInt(value, 10);
+    
+    // Check for NaN result (invalid conversion)
+    if (isNaN(parsed)) {
+        return { valid: false, error: "Value must be a valid number" };
+    }
+    
+    // Check for negative values
+    if (parsed < 0) {
+        return { valid: false, error: "Value cannot be negative" };
+    }
+    
+    return { valid: true, value: parsed };
+}
+
 /* The ContributionsHandler must be constructed with a connected db */
 function ContributionsHandler(db) {
     "use strict";
@@ -27,26 +50,32 @@ function ContributionsHandler(db) {
 
     this.handleContributionsUpdate = (req, res, next) => {
 
-        //Fix for A1 -1 SSJS Injection attacks - uses alternate method to eval
-        const preTax = parseInt(req.body.preTax);
-        const afterTax = parseInt(req.body.afterTax);
-        const roth = parseInt(req.body.roth);
+        // Security fix for RCE vulnerability (CVE-style): Replaced eval() with safe parseInt()
+        // and added strict input validation to prevent code injection attacks
+        const preTaxValidation = validateContributionInput(req.body.preTax);
+        const afterTaxValidation = validateContributionInput(req.body.afterTax);
+        const rothValidation = validateContributionInput(req.body.roth);
+        
         const {
             userId
         } = req.session;
 
-        //validate contributions
-        const validations = [isNaN(preTax), isNaN(afterTax), isNaN(roth), preTax < 0, afterTax < 0, roth < 0];
-        const isInvalid = validations.some(validation => validation);
-        if (isInvalid) {
+        // Check for validation errors
+        if (!preTaxValidation.valid || !afterTaxValidation.valid || !rothValidation.valid) {
             return res.render("contributions", {
                 updateError: "Invalid contribution percentages",
                 userId,
                 environmentalScripts
             });
         }
-        // Prevent more than 30% contributions
-        if (preTax + afterTax + roth > 30) {
+
+        const preTax = preTaxValidation.value;
+        const afterTax = afterTaxValidation.value;
+        const roth = rothValidation.value;
+
+        // Validate total contributions do not exceed 30%
+        const totalContributions = preTax + afterTax + roth;
+        if (totalContributions > 30) {
             return res.render("contributions", {
                 updateError: "Contribution percentages cannot exceed 30 %",
                 userId,

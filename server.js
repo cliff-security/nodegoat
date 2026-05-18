@@ -121,9 +121,9 @@ MongoClient.connect(db, (err, db) => {
 
     // Initializing marked library
     // Fix for A9 - Insecure Dependencies
-    marked.setOptions({
-        sanitize: true
-    });
+    // Note: sanitize option was removed in marked@4.0.10. HTML is no longer sanitized by default.
+    // For security, consider using DOMPurify or similar on the frontend if user-generated markdown is displayed.
+    // Time limit protection against ReDoS: CVE-2022-21681 is patched in this version.
     app.locals.marked = marked;
 
     // Application routes

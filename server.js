@@ -139,6 +139,34 @@ MongoClient.connect(db, (err, db) => {
         */
     });
 
+    // Security Fix for CVE-2023-25345: Directory Traversal in Template Engine
+    // Restrict template path resolution to prevent directory traversal attacks
+    // This mitigates the arbitrary file read vulnerability in swig <= 1.4.2
+    const path = require('path');
+    const viewsPath = path.resolve(`${__dirname}/app/views`);
+    
+    // Override swig's file loader to validate paths
+    const originalLoaders = swig.loaders;
+    swig.loaders.file = (filename, callback) => {
+        try {
+            // Resolve the template path
+            const resolvedPath = path.resolve(viewsPath, filename);
+            
+            // Ensure the resolved path is within the views directory (prevent directory traversal)
+            if (!resolvedPath.startsWith(viewsPath)) {
+                const error = new Error(`Template path traversal attempt blocked: ${filename}`);
+                return callback(error);
+            }
+            
+            // If validation passes, use the original file loader
+            if (originalLoaders && originalLoaders.file) {
+                originalLoaders.file(resolvedPath, callback);
+            }
+        } catch (err) {
+            callback(err);
+        }
+    };
+
     // Insecure HTTP connection
     http.createServer(app).listen(port, () => {
         console.log(`Express http server listening on port ${port}`);

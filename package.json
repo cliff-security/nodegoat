@@ -71,6 +71,7 @@
   "license": "Apache 2.0",
   "overrides": {
     "bson": ">=1.1.4",
-    "minimist": "^1.2.6"
+    "minimist": "^1.2.6",
+    "braces": "^3.0.3"
   }
 }

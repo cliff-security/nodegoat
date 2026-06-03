@@ -65,6 +65,7 @@
     "nodemon": "^1.19.1",
     "selenium-webdriver": "^2.53.2",
     "should": "^8.3.1",
+    "uglify-js": "^2.8.29",
     "zaproxy": "^0.2.0"
   },
   "repository": "https://github.com/OWASP/NodejsGoat",
